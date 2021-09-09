@@ -1,0 +1,18 @@
+tasks:
+  - init: |
+      docker-compose pull
+  - command: |
+      npm install
+      npm run build
+      docker-compose up
+
+ports:
+  - port: 8581
+    onOpen: open-browser
+
+vscode:
+  extensions:
+    - ms-azuretools.vscode-docker
+    - dbaeumer.vscode-eslint
+    - streetsidesoftware.code-spell-checker
+    - gitlab.gitlab-workflow

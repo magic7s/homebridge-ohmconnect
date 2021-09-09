@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  homebridge:
+    image: oznu/homebridge:latest
+    container_name: homebridge
+    restart: always
+    ports:
+      - "8581:8581"
+    networks:
+      - homebridge
+    environment:
+      - TZ=America/Los_Angeles
+      - PGID=1000
+      - PUID=1000
+      - HOMEBRIDGE_CONFIG_UI=1
+      - HOMEBRIDGE_CONFIG_UI_PORT=8581
+    volumes:
+      - ./homebridge:/homebridge
+      - ./dist:/usr/local/lib/node_modules/homebridge-ohmconnect/dist
+      - ./node_modules:/usr/local/lib/node_modules/homebridge-ohmconnect/node_modules
+      - ./package.json:/usr/local/lib/node_modules/homebridge-ohmconnect/package.json
+      - ./package-lock.json:/usr/local/lib/node_modules/homebridge-ohmconnect/package-lock.json
+      - ./config.schema.json:/usr/local/lib/node_modules/homebridge-ohmconnect/config.schema.json
+
+networks:
+  homebridge:
+    driver: bridge

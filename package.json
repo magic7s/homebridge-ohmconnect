@@ -1,5 +1,5 @@
 {
-  "private": true,
+  "private": false,
   "displayName": "Homebridge OhmConnect",
   "name": "homebridge-ohmconnect",
   "version": "0.0.1",

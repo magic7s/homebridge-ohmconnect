@@ -26,31 +26,26 @@ test:vulnerabilities:
 test:node:14:
   script:
     - npm run build
-    - npm test && codecov
 
 test:node:10:
   image: node:10
   script:
     - npm run build
-    - npm test
 
 test:node:12:
   image: node:12
   script:
     - npm run build
-    - npm test
 
 test:node:13:
   image: node:13
   script:
     - npm run build
-    - npm test
 
 test:node:15:
   image: node:15
   script:
     - npm run build
-    - npm test
 
 # Publish tagged versions to npm
 publish:

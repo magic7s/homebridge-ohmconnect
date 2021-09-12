@@ -6,55 +6,50 @@ include:
   - template: Security/SAST.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Security/Secret-Detection.gitlab-ci.yml
 
-image: node:14
 
-before_script:
-  - npm install
-
-# This folder is cached between builds
-# http://docs.gitlab.com/ce/ci/yaml/README.html#cache
 cache:
   paths:
     - node_modules/
 
+.node_template:
+  image: node:14
+  before_script:
+    - npm install
+  script:
+    - npm run build
+
 test:lint:
+  extends: .node_template
   script:
     - npm run lint
 
 test:vulnerabilities:
+  extends: .node_template
   script:
     - npm audit
 
-# Supported node versions can be found here:
-# https://github.com/nodejs/LTS#lts_schedule
-# jest does not support node < 4
-# https://facebook.github.io/jest/docs/troubleshooting.html#compatibility-issues
 test:node:14:
-  script:
-    - npm run build
+  extends: .node_template
 
 test:node:10:
   image: node:10
-  script:
-    - npm run build
+  extends: .node_template
 
 test:node:12:
   image: node:12
-  script:
-    - npm run build
+  extends: .node_template
 
 test:node:13:
   image: node:13
-  script:
-    - npm run build
+  extends: .node_template
 
 test:node:15:
   image: node:15
-  script:
-    - npm run build
+  extends: .node_template
 
 # Publish tagged versions to npm
 publish:
+  extends: .node_template
   stage: deploy
   only:
     - tags

@@ -8,6 +8,7 @@ include:
 
 variables:
   SECRET_DETECTION_EXCLUDED_PATHS: "node_modules/*"
+  SAST_EXCLUDED_PATHS: "node_modules/*"
 
 cache:
   paths:

@@ -136,3 +136,8 @@ dist
 
 !homebridge/config.json
 homebridge/*
+
+  
+.gitlab-ci.yml        
+.gitpod.yml           
+docker-compose.yml

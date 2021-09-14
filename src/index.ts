@@ -47,7 +47,7 @@ class OhmConnectAccessory implements AccessoryPlugin {
   /**
  * Handle requests to get the current value of the "Contact Sensor State" characteristic
  */
-  handleContactSensorStateGet() {
+  async handleContactSensorStateGet() {
     this.log.debug('Triggered GET ContactSensorState');
 
     // Default Contact Sensor to CLOSED
@@ -55,7 +55,7 @@ class OhmConnectAccessory implements AccessoryPlugin {
 
     const parser = new xml2js.Parser();
 
-    axios.get(this.statusUrl)
+    await axios.get(this.statusUrl)
       .then((response) => {
         // handle success
         this.log.debug('Full Response:\n%s', response.data);
@@ -79,8 +79,6 @@ class OhmConnectAccessory implements AccessoryPlugin {
       .then(() => {
         // always executed
       });
-
-    this.log.debug('Value of sensor state before return: %d', currentValue);
 
     return currentValue;
   }

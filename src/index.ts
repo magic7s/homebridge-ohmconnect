@@ -58,7 +58,7 @@ class OhmConnectAccessory implements AccessoryPlugin {
     axios.get(this.statusUrl)
       .then((response) => {
         // handle success
-        this.log.debug('Full Response: %s', response.data);
+        this.log.debug('Full Response:\n%s', response.data);
         parser.parseString(response.data, (err, result) => {
           this.log.debug('Parsed result: %s', result.ohmhour.active[0]);
           if (result.ohmhour.active[0] === 'False') {
@@ -80,10 +80,7 @@ class OhmConnectAccessory implements AccessoryPlugin {
         // always executed
       });
 
-
-
-    // set this to a valid value for ContactSensorState
-    //const currentValue = hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
+    this.log.debug('Value of sensor state before return: %d', currentValue);
 
     return currentValue;
   }

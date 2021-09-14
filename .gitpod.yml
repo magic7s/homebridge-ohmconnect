@@ -1,7 +1,6 @@
 tasks:
-  - init: |
-      npm install
   - command: |
+      npm install
       npm run build
       npm run watch
 

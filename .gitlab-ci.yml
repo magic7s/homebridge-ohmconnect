@@ -32,6 +32,7 @@ test:vulnerabilities prod:
     - npm audit --production
   only:
     - master
+    - tags
 
 test:vulnerabilities dev:
   extends: .node_template
@@ -39,6 +40,7 @@ test:vulnerabilities dev:
     - npm audit
   except:
     - master
+    - tags
 
 test:node:14:
   extends: .node_template

@@ -26,10 +26,19 @@ test:lint:
   script:
     - npm run lint
 
-test:vulnerabilities:
+test:vulnerabilities prod:
+  extends: .node_template
+  script:
+    - npm audit --production
+  only:
+    - master
+
+test:vulnerabilities dev:
   extends: .node_template
   script:
     - npm audit
+  except:
+    - master
 
 test:node:14:
   extends: .node_template

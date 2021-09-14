@@ -119,5 +119,4 @@ dist
 .yarn/build-state.yml
 .pnp.*
 
-!homebridge/config.json
-homebridge/*
+.homebridge/*

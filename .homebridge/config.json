@@ -5,14 +5,7 @@
         "port": 52996,
         "pin": "031-45-154"
     },
-    "accessories": [
-        {
-            "name": "OhmConnect",
-            "ohmConnectId": "XXXXX",
-            "refreshMinutes": 1,
-            "accessory": "OhmConnect"
-        }
-    ],
+    "accessories": [],
     "platforms": [
         {
             "name": "Config",

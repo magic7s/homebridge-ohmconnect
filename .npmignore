@@ -134,10 +134,8 @@ dist
 .yarn/build-state.yml
 .pnp.*
 
-!homebridge/config.json
-homebridge/*
+.homebridge/*
 
-  
 .gitlab-ci.yml        
 .gitpod.yml           
 docker-compose.yml

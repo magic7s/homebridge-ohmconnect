@@ -15,7 +15,7 @@ services:
       - HOMEBRIDGE_CONFIG_UI=1
       - HOMEBRIDGE_CONFIG_UI_PORT=8581
     volumes:
-      - ./homebridge:/homebridge
+      - ./.homebridge:/homebridge
       - ./dist:/usr/local/lib/node_modules/homebridge-ohmconnect/dist
       - ./node_modules:/usr/local/lib/node_modules/homebridge-ohmconnect/node_modules
       - ./package.json:/usr/local/lib/node_modules/homebridge-ohmconnect/package.json

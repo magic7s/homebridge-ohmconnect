@@ -1,0 +1,23 @@
+{
+    "bridge": {
+        "name": "Homebridge A543",
+        "username": "0E:59:6A:08:A5:43",
+        "port": 52996,
+        "pin": "031-45-154"
+    },
+    "accessories": [
+        {
+            "name": "OhmConnect",
+            "ohmConnectId": "XXXXX",
+            "refreshMinutes": 1,
+            "accessory": "OhmConnect"
+        }
+    ],
+    "platforms": [
+        {
+            "name": "Config",
+            "port": 8581,
+            "platform": "config"
+        }
+    ]
+}

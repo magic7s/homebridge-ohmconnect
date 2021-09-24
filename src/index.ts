@@ -27,14 +27,20 @@ class OhmConnectAccessory implements AccessoryPlugin {
     // create a new Contact Sensor service
     this.sensorService = new hap.Service.ContactSensor(this.config.name);
 
+    this.infoService = new hap.Service.AccessoryInformation()
+      .setCharacteristic(hap.Characteristic.Manufacturer, 'Ohm Connect')
+      .setCharacteristic(hap.Characteristic.Model, 'Active Ohm Hour')
+      .setCharacteristic(hap.Characteristic.SerialNumber, this.config.ohmConnectId);
+
+    // Check if missing OhmConnectId in config before attempting to fetch status.
+    if (!('ohmConnectId' in this.config) || this.config.ohmConnectId === '') {
+      this.log.error('ohmConnectId missing or blank, check config.json');
+      return;
+    }
 
     // create handlers for required characteristics
     this.sensorService.getCharacteristic(hap.Characteristic.ContactSensorState)
       .onGet(this.handleContactSensorStateGet.bind(this));
-
-    this.infoService = new hap.Service.AccessoryInformation()
-      .setCharacteristic(hap.Characteristic.Manufacturer, 'Ohm Connect')
-      .setCharacteristic(hap.Characteristic.Model, 'Active Ohm Hour');
 
     setInterval(() => {
 
@@ -60,26 +66,37 @@ class OhmConnectAccessory implements AccessoryPlugin {
         // handle success
         this.log.debug('Full Response:\n%s', response.data);
         parser.parseString(response.data, (err, result) => {
-          this.log.debug('Parsed result: %s', result.ohmhour.active[0]);
-          if (result.ohmhour.active[0] === 'False') {
-            this.log.debug('Setting Contact Sensor to CLOSED');
-            currentValue = hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
-          } else if (result.ohmhour.active[0] === 'True') {
-            this.log.debug('Setting Contact Sensor to OPEN');
-            currentValue = hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED;
-          } else {
-            this.log.info('Received unexpected value %s', result.ohmhour.active[0]);
+          if (err || !('ohmhour' in result)) {
+            this.log.error('Error parsing result: %s', err);
+            return;
+          }
+          if ('error' in result.ohmhour) {
+            this.log.error('Error received from web service: %s', result.ohmhour.error[0]);
+            return;
+          }
+          if ('active' in result.ohmhour) {
+            this.log.debug('Parsed result: %s', result.ohmhour.active[0]);
+            if (result.ohmhour.active[0] === 'False') {
+              this.log.debug('Setting Contact Sensor to CLOSED');
+              currentValue = hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
+            } else if (result.ohmhour.active[0] === 'True') {
+              this.log.debug('Setting Contact Sensor to OPEN');
+              currentValue = hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED;
+            } else {
+              this.log.info('Received unexpected value %s', result.ohmhour.active[0]);
+            }
           }
         });
       })
       .catch((error) => {
         // handle error
-        this.log.debug(error);
+        this.log.error('Error while connecting to web service: %s', error);
       })
       .then(() => {
         // always executed
       });
 
+    this.log.debug('Returning value of %d', currentValue);
     return currentValue;
   }
 

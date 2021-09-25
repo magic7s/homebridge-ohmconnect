@@ -55,6 +55,8 @@ class OhmConnectAccessory implements AccessoryPlugin {
  */
   async handleContactSensorStateGet() {
     this.log.debug('Triggered GET ContactSensorState');
+    const previousValue = this.sensorService.getCharacteristic(hap.Characteristic.ContactSensorState).value;
+    this.log.debug('Previous sensor state value of %d', this.sensorService.getCharacteristic(hap.Characteristic.ContactSensorState).value);
 
     // Default Contact Sensor to CLOSED
     let currentValue = hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
@@ -96,6 +98,9 @@ class OhmConnectAccessory implements AccessoryPlugin {
         // always executed
       });
 
+    if (currentValue !== previousValue) {
+      this.log.info('Change in contact sensor state, new value is %d', currentValue);
+    }
     this.log.debug('Returning value of %d', currentValue);
     return currentValue;
   }

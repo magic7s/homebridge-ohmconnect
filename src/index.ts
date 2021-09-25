@@ -72,22 +72,7 @@ class OhmConnectAccessory implements AccessoryPlugin {
             this.log.error('Error parsing result: %s', err);
             return;
           }
-          if ('error' in result.ohmhour) {
-            this.log.error('Error received from web service: %s', result.ohmhour.error[0]);
-            return;
-          }
-          if ('active' in result.ohmhour) {
-            this.log.debug('Parsed result: %s', result.ohmhour.active[0]);
-            if (result.ohmhour.active[0] === 'False') {
-              this.log.debug('Setting Contact Sensor to CLOSED');
-              currentValue = hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
-            } else if (result.ohmhour.active[0] === 'True') {
-              this.log.debug('Setting Contact Sensor to OPEN');
-              currentValue = hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED;
-            } else {
-              this.log.info('Received unexpected value %s', result.ohmhour.active[0]);
-            }
-          }
+          currentValue = this.xmlResponseProcess(result);
         });
       })
       .catch((error) => {
@@ -103,6 +88,30 @@ class OhmConnectAccessory implements AccessoryPlugin {
     }
     this.log.debug('Returning value of %d', currentValue);
     return currentValue;
+  }
+
+  /**
+ * Process xml output from api response
+ */
+  private xmlResponseProcess(result) {
+    let value;
+    if ('error' in result.ohmhour) {
+      this.log.error('Error received from web service: %s', result.ohmhour.error[0]);
+      return hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
+    }
+    if ('active' in result.ohmhour) {
+      this.log.debug('Parsed result: %s', result.ohmhour.active[0]);
+      if (result.ohmhour.active[0] === 'False') {
+        this.log.debug('Setting Contact Sensor to CLOSED');
+        value = hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
+      } else if (result.ohmhour.active[0] === 'True') {
+        this.log.debug('Setting Contact Sensor to OPEN');
+        value = hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED;
+      } else {
+        this.log.info('Received unexpected value %s', result.ohmhour.active[0]);
+      }
+    }
+    return value;
   }
 
   getServices(): Service[] {

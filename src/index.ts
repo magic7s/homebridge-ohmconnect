@@ -78,9 +78,6 @@ class OhmConnectAccessory implements AccessoryPlugin {
       .catch((error) => {
         // handle error
         this.log.error('Error while connecting to web service: %s', error);
-      })
-      .then(() => {
-        // always executed
       });
 
     if (currentValue !== previousValue) {
@@ -95,21 +92,23 @@ class OhmConnectAccessory implements AccessoryPlugin {
  */
   private xmlResponseProcess(result) {
     let value;
-    if ('error' in result.ohmhour) {
+    if (('error' in result.ohmhour) || !('active' in result.ohmhour)) {
       this.log.error('Error received from web service: %s', result.ohmhour.error[0]);
       return hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
     }
-    if ('active' in result.ohmhour) {
-      this.log.debug('Parsed result: %s', result.ohmhour.active[0]);
-      if (result.ohmhour.active[0] === 'False') {
+    this.log.debug('Parsed result: %s', result.ohmhour.active[0]);
+    switch (result.ohmhour.active[0]) {
+      case 'False':
         this.log.debug('Setting Contact Sensor to CLOSED');
         value = hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
-      } else if (result.ohmhour.active[0] === 'True') {
+        break;
+      case 'True':
         this.log.debug('Setting Contact Sensor to OPEN');
         value = hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED;
-      } else {
+        break;
+      default:
         this.log.info('Received unexpected value %s', result.ohmhour.active[0]);
-      }
+        break;
     }
     return value;
   }

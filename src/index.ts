@@ -55,6 +55,8 @@ class OhmConnectAccessory implements AccessoryPlugin {
  */
   async handleContactSensorStateGet() {
     this.log.debug('Triggered GET ContactSensorState');
+    const previousValue = this.sensorService.getCharacteristic(hap.Characteristic.ContactSensorState).value;
+    this.log.debug('Previous sensor state value of %d', this.sensorService.getCharacteristic(hap.Characteristic.ContactSensorState).value);
 
     // Default Contact Sensor to CLOSED
     let currentValue = hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
@@ -66,38 +68,45 @@ class OhmConnectAccessory implements AccessoryPlugin {
         // handle success
         this.log.debug('Full Response:\n%s', response.data);
         parser.parseString(response.data, (err, result) => {
-          if (err || !('ohmhour' in result)) {
-            this.log.error('Error parsing result: %s', err);
+          if (err || !('ohmhour' in result) || ('error' in result.ohmhour) || !('active' in result.ohmhour)) {
+            this.log.error('Error parsing result: %s', (err || result.ohmhour.error[0]|| 'Unknown, enable debug'));
             return;
           }
-          if ('error' in result.ohmhour) {
-            this.log.error('Error received from web service: %s', result.ohmhour.error[0]);
-            return;
-          }
-          if ('active' in result.ohmhour) {
-            this.log.debug('Parsed result: %s', result.ohmhour.active[0]);
-            if (result.ohmhour.active[0] === 'False') {
-              this.log.debug('Setting Contact Sensor to CLOSED');
-              currentValue = hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
-            } else if (result.ohmhour.active[0] === 'True') {
-              this.log.debug('Setting Contact Sensor to OPEN');
-              currentValue = hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED;
-            } else {
-              this.log.info('Received unexpected value %s', result.ohmhour.active[0]);
-            }
-          }
+          currentValue = this.xmlResponseProcess(result);
         });
       })
       .catch((error) => {
         // handle error
         this.log.error('Error while connecting to web service: %s', error);
-      })
-      .then(() => {
-        // always executed
       });
 
+    if (currentValue !== previousValue) {
+      this.log.info('Change in contact sensor state, new value is %d', currentValue);
+    }
     this.log.debug('Returning value of %d', currentValue);
     return currentValue;
+  }
+
+  /**
+ * Process xml output from api response
+ */
+  private xmlResponseProcess(result) {
+    let value;
+    this.log.debug('Parsed result: %s', result.ohmhour.active[0]);
+    switch (result.ohmhour.active[0]) {
+      case 'False':
+        this.log.debug('Setting Contact Sensor to CLOSED');
+        value = hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
+        break;
+      case 'True':
+        this.log.debug('Setting Contact Sensor to OPEN');
+        value = hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED;
+        break;
+      default:
+        this.log.info('Received unexpected value %s', result.ohmhour.active[0]);
+        break;
+    }
+    return value;
   }
 
   getServices(): Service[] {

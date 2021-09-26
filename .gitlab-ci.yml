@@ -33,6 +33,7 @@ test:vulnerabilities prod:
   only:
     - master
     - tags
+  allow_failure: false
 
 test:vulnerabilities dev:
   extends: .node_template
@@ -41,6 +42,7 @@ test:vulnerabilities dev:
   except:
     - master
     - tags
+  allow_failure: true
 
 test:node:14:
   extends: .node_template

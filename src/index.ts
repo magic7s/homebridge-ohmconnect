@@ -68,8 +68,8 @@ class OhmConnectAccessory implements AccessoryPlugin {
         // handle success
         this.log.debug('Full Response:\n%s', response.data);
         parser.parseString(response.data, (err, result) => {
-          if (err || !('ohmhour' in result)) {
-            this.log.error('Error parsing result: %s', err);
+          if (err || !('ohmhour' in result) || ('error' in result.ohmhour) || !('active' in result.ohmhour)) {
+            this.log.error('Error parsing result: %s', (err || result.ohmhour.error[0]));
             return;
           }
           currentValue = this.xmlResponseProcess(result);
@@ -92,10 +92,6 @@ class OhmConnectAccessory implements AccessoryPlugin {
  */
   private xmlResponseProcess(result) {
     let value;
-    if (('error' in result.ohmhour) || !('active' in result.ohmhour)) {
-      this.log.error('Error received from web service: %s', result.ohmhour.error[0]);
-      return hap.Characteristic.ContactSensorState.CONTACT_DETECTED;
-    }
     this.log.debug('Parsed result: %s', result.ohmhour.active[0]);
     switch (result.ohmhour.active[0]) {
       case 'False':

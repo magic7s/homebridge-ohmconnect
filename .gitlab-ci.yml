@@ -40,7 +40,7 @@ test:vulnerabilities prod:
     - tags
   allow_failure: false
 
-test:vulnerabilities_dev:
+test:vulnerabilities dev:
   extends: .node_template
   script:
     - npm audit

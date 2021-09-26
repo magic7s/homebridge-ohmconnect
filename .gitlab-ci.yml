@@ -26,6 +26,11 @@ test:lint:
   script:
     - npm run lint
 
+test:unit:
+  extends: .node_template
+  script:
+    - npm run test
+
 test:vulnerabilities prod:
   extends: .node_template
   script:
@@ -35,7 +40,7 @@ test:vulnerabilities prod:
     - tags
   allow_failure: false
 
-test:vulnerabilities dev:
+test:vulnerabilities_dev:
   extends: .node_template
   script:
     - npm audit

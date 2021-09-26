@@ -69,7 +69,7 @@ class OhmConnectAccessory implements AccessoryPlugin {
         this.log.debug('Full Response:\n%s', response.data);
         parser.parseString(response.data, (err, result) => {
           if (err || !('ohmhour' in result) || ('error' in result.ohmhour) || !('active' in result.ohmhour)) {
-            this.log.error('Error parsing result: %s', (err || result.ohmhour.error[0]));
+            this.log.error('Error parsing result: %s', (err || result.ohmhour.error[0]|| 'Unknown, enable debug'));
             return;
           }
           currentValue = this.xmlResponseProcess(result);

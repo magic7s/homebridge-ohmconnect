@@ -2,7 +2,7 @@
   "private": false,
   "displayName": "Homebridge OhmConnect",
   "name": "homebridge-ohmconnect",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "OhmConnect Hour Status",
   "license": "Apache-2.0",
   "repository": {

@@ -55,10 +55,6 @@ test:node:19:
   image: node:19
   extends: .node_template
 
-test:node:20:
-  image: node:20
-  extends: .node_template
-
 # Publish tagged versions to npm
 publish:
   extends: .node_template

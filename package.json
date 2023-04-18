@@ -2,7 +2,7 @@
   "private": false,
   "displayName": "Homebridge OhmConnect",
   "name": "homebridge-ohmconnect",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "OhmConnect Hour Status",
   "license": "Apache-2.0",
   "repository": {
@@ -29,7 +29,7 @@
   ],
   "dependencies": {
     "axios": "^0.27.0",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.5.0"
   },
   "devDependencies": {
     "@types/node": "^16.11.7",
@@ -37,7 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "eslint": "^8.14.0",
-    "homebridge": "^1.4.0",
+    "homebridge": "^1.6.0",
     "homebridge-config-ui-x": "^4.43.1",
     "nodemon": "^2.0.15",
     "rimraf": "^3.0.2",

@@ -10,7 +10,11 @@
         {
             "name": "Config",
             "port": 8581,
-            "platform": "config"
+            "platform": "config",
+            "log": {
+                "method": "file",
+                "path": "homebridge.log"
+            }
         }
     ]
 }

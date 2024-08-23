@@ -14,7 +14,7 @@ cache:
     - node_modules/
 
 .node_template:
-  image: node:18
+  image: node:20
   before_script:
     - npm install
   script:
@@ -43,15 +43,16 @@ test:vulnerabilities dev:
     - tags
   allow_failure: true
 
-test:node:16:
-   image: node:16
-   extends: .node_template
-
 test:node:18:
+  image: node:18
   extends: .node_template
 
 test:node:20:
   image: node:20
+  extends: .node_template
+
+test:node:22:
+  image: node:22
   extends: .node_template
 
 # Publish tagged versions to npm
